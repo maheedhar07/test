@@ -1,5 +1,5 @@
 # Set the version of ChromeDriver to download
-$chromeDriverVersion = "94.0.4606.61"
+$chromeDriverVersion = "111.0.5563.64"
 
 # Set the URL of the ChromeDriver binary for Windows
 $chromeDriverUrl = "https://chromedriver.storage.googleapis.com/$chromeDriverVersion/chromedriver_win32.zip"
