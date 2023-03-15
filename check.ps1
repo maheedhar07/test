@@ -14,14 +14,8 @@ Expand-Archive "$($env:AGENT_TOOLSDIRECTORY)\chromedriver.zip" -DestinationPath 
 $env:PATH += ";$($env:AGENT_TOOLSDIRECTORY)\chromedriver"
 
 
-# Set the URL of the Google Chrome installer
-$chromeInstallerUrl = "https://dl.google.com/chrome/install/standalone/GoogleChromeStandaloneEnterprise64.msi"
-
-# Set the file path to save the installer
-$chromeInstallerPath = "$($env:AGENT_TEMPDIRECTORY)\GoogleChromeStandaloneEnterprise64.msi"
-
-# Download the Chrome installer
-Invoke-WebRequest -Uri $chromeInstallerUrl -OutFile $chromeInstallerPath
-
-# Install Chrome silently
-Start-Process -FilePath msiexec.exe -ArgumentList "/i `"$chromeInstallerPath`" /qn" -Wait
+	$Path = $env:TEMP;
+	$Installer = "chrome_installer.exe"
+	Invoke-WebRequest "http://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile $Path\$Installer
+	Start-Process -FilePath $Path\$Installer -Args "/silent /install" -Verb RunAs
+	Remove-Item $Path\$Installer
