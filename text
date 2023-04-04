@@ -1,0 +1,3 @@
+RUN curl -L https://download.java.net/openjdk/jdk17/ri/openjdk-17+35_linux-x64_bin.tar.gz --output /tmp/openjdk-17+35_linux-x64_bin.tar.gz && \
+    tar -xzf /tmp/openjdk-17+35_linux-x64_bin.tar.gz -C /opt/ && \
+    rm /tmp/openjdk-17+35_linux-x64_bin.tar.gz
