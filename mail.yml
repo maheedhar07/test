@@ -1,0 +1,28 @@
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $emailFrom = "sender@example.com"
+      $emailTo = "recipient1@example.com, recipient2@example.com"
+      $subject = "Email notification with attachment"
+      $body = "This is a sample email notification with an attachment sent using Azure DevOps Pipelines."
+      $attachmentPath = "$(Build.ArtifactStagingDirectory)/attachment.txt"
+      
+      # Define SMTP server settings
+      $smtpServer = "smtp.example.com"
+      $smtpPort = 587
+      $smtpUsername = "smtp-username"
+      $smtpPassword = "smtp-password"
+      
+      # Create a new .NET MailMessage object
+      $msg = New-Object Net.Mail.MailMessage($emailFrom, $emailTo, $subject, $body)
+      $attachment = New-Object Net.Mail.Attachment($attachmentPath)
+      $msg.Attachments.Add($attachment)
+      
+      # Create a new .NET SmtpClient object and send the email
+      $smtpClient = New-Object Net.Mail.SmtpClient($smtpServer, $smtpPort)
+      $smtpClient.EnableSsl = $true
+      $smtpClient.Credentials = New-Object System.Net.NetworkCredential($smtpUsername, $smtpPassword)
+      $smtpClient.Send($msg)
+      
+      Write-Host "Email sent successfully!"
