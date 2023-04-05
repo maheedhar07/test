@@ -1,21 +1,49 @@
-# Set the version of ChromeDriver to download
-$chromeDriverVersion = "111.0.5563.64"
+# Define email parameters
+$from = "sender@example.com"
+$to = "recipient@example.com"
+$subject = "Test Execution Report - Failed Tests"
+$body = "The following tests have failed in the latest test execution: <br>"
+# Retrieve failed tests and append to the email body
 
-# Set the URL of the ChromeDriver binary for Windows
-$chromeDriverUrl = "https://chromedriver.storage.googleapis.com/$chromeDriverVersion/chromedriver_win32.zip"
+# Create a zip file of the folder to be attached
+$folderPath = "C:\path\to\folder" # Update with the path to your folder
+$zipPath = "C:\path\to\folder.zip" # Update with the desired path for the zip file
+Compress-Archive -Path $folderPath -DestinationPath $zipPath
 
-# Download the ChromeDriver binary
-Invoke-WebRequest -Uri $chromeDriverUrl -OutFile "$($env:AGENT_TOOLSDIRECTORY)\chromedriver.zip"
-
-# Extract the binary to the tools directory
-Expand-Archive "$($env:AGENT_TOOLSDIRECTORY)\chromedriver.zip" -DestinationPath "$($env:AGENT_TOOLSDIRECTORY)\chromedriver"
-
-# Add the tools directory to the system PATH
-$env:PATH += ";$($env:AGENT_TOOLSDIRECTORY)\chromedriver"
+# Send email with folder attached
+Send-MailMessage -From $from -To $to -Subject $subject -Body $body -BodyAsHtml -SmtpServer "smtp.example.com" -Attachments $zipPath
 
 
-	$Path = $env:TEMP;
-	$Installer = "chrome_installer.exe"
-	Invoke-WebRequest "http://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile $Path\$Installer
-	Start-Process -FilePath $Path\$Installer -Args "/silent /install" -Verb RunAs
-	Remove-Item $Path\$Installer
+  - task: PowerShell@2
+    displayName: 'Run PowerShell Script'
+    inputs:
+      targetType: 'filePath'
+      filePath: 'path/to/send_email.ps1' 
+      arguments: '-ExecutionPolicy Unrestricted'
+      
+      
+  
+ steps:
+  - script: |
+      # Define email parameters
+      $from = "sender@example.com"
+      $to = "recipient@example.com"
+      $subject = "Test Execution Report - Failed Tests"
+      $body = "The following tests have failed in the latest test execution: <br>"
+      
+      # Retrieve failed tests and append to the email body
+      
+      # Create a zip file of the folder to be attached
+      $folderPath = "C:\path\to\folder" # Update with the path to your folder
+      $zipPath = "C:\path\to\folder.zip" # Update with the desired path for the zip file
+      Compress-Archive -Path $folderPath -DestinationPath $zipPath
+      
+      # Send email with folder attached
+      Send-MailMessage -From $from -To $to -Subject $subject -Body $body -BodyAsHtml -SmtpServer "smtp.example.com" -Attachments $zipPath
+    displayName: 'Execute PowerShell Script'
+  - task: PowerShell@2
+    inputs:
+      targetType: 'filePath'
+      filePath: '$(Agent.BuildDirectory)/path/to/your/powershell_script.ps1'
+      arguments: '-ExecutionPolicy Unrestricted'
+    displayName: 'Run PowerShell Script'
