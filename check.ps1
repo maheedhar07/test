@@ -22,6 +22,7 @@ try {
     $message.Attachments.Add($attachment)
 
     $smtp = New-Object System.Net.Mail.SmtpClient($smtpServer)
+    $smtp.DeliveryMethod = [System.Net.Mail.SmtpDeliveryMethod]::Network
     $smtp.Send($message)
 
     Write-Output "Email sent successfully to $($recipientEmails -join ', ')"
