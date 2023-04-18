@@ -1,0 +1,15 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+     - base/*
+     - overlays/dev/*
+     - overlays/sit/*
+     - overlays/nonprod-appcert/*
+
+
+
+pool:
+  name: 'Default'
